@@ -148,43 +148,61 @@ h1 {
   margin-bottom: var(--space-7);
 }
 
-/* Install block */
+/* Install input */
 .install-block {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-4);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-5);
-  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
   transition: border-color 200ms ease, box-shadow 200ms ease;
-  user-select: none;
+  max-width: 520px;
+  width: 100%;
 }
-.install-block:hover {
+.install-block:focus-within {
   border-color: var(--green);
   box-shadow: 0 0 0 3px var(--green-dim);
 }
-.install-block:active {
-  background: var(--surface-hover);
+.install-prefix {
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  color: var(--green);
+  font-weight: 500;
+  padding: var(--space-3) 0 var(--space-3) var(--space-5);
+  flex-shrink: 0;
+  user-select: none;
 }
-.install-block code {
+.install-input {
   font-family: var(--mono);
   font-size: var(--text-sm);
   color: var(--text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: var(--space-3) var(--space-2);
+  flex: 1;
+  min-width: 0;
   letter-spacing: 0.02em;
 }
-.install-block .prompt { color: var(--green); font-weight: 500; }
-.install-block .copy-hint {
+.install-input::placeholder { color: var(--text-faint); }
+.install-btn {
   font-family: var(--mono);
   font-size: var(--text-xs);
-  color: var(--text-faint);
-  border-left: 1px solid var(--border);
-  padding-left: var(--space-4);
-  transition: color 200ms;
+  color: #fff;
+  background: var(--green);
+  border: none;
+  padding: var(--space-3) var(--space-5);
+  cursor: pointer;
+  flex-shrink: 0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: background 150ms;
+  align-self: stretch;
 }
-.install-block:hover .copy-hint { color: var(--green); }
-.install-block.copied .copy-hint { color: var(--green); }
+.install-btn:hover { background: var(--green-light); }
 
 .install-note {
   font-family: var(--sans);
@@ -482,11 +500,12 @@ h1 {
     <div class="logo-mark"><span>P</span></div>
     <h1>parc</h1>
     <p class="tagline">Agent-first architecture intelligence</p>
-    <div class="install-block" onclick="copyCmd(this)" role="button" tabindex="0" aria-label="Copy install command">
-      <code><span class="prompt">$</span> npx parc map ./your-repo</code>
-      <span class="copy-hint">copy</span>
+    <div class="install-block">
+      <span class="install-prefix">$ npx parc map</span>
+      <input class="install-input" id="repo-input" type="text" placeholder="./your-repo" spellcheck="false" autocomplete="off">
+      <button class="install-btn" id="copy-btn" onclick="copyCmd()">Copy</button>
     </div>
-    <p class="install-note">Drop any git repo. Get an interactive architecture map.</p>
+    <p class="install-note">Paste a repo path, then copy the full command.</p>
   </div>
 
   <div class="section">
@@ -628,17 +647,19 @@ h1 {
 </div>
 
 <script>
-function copyCmd(el) {
-  navigator.clipboard.writeText('npx parc map ./your-repo').then(function() {
-    el.classList.add('copied');
-    var hint = el.querySelector('.copy-hint');
-    hint.textContent = 'copied';
-    setTimeout(function() { el.classList.remove('copied'); hint.textContent = 'copy'; }, 2000);
+function copyCmd() {
+  var input = document.getElementById('repo-input');
+  var repo = input.value.trim() || './your-repo';
+  var cmd = 'npx parc map ' + repo;
+  var btn = document.getElementById('copy-btn');
+  navigator.clipboard.writeText(cmd).then(function() {
+    btn.textContent = 'Copied';
+    btn.style.background = 'var(--green-light)';
+    setTimeout(function() { btn.textContent = 'Copy'; btn.style.background = ''; }, 2000);
   });
 }
-// Keyboard support
-document.querySelector('.install-block').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyCmd(this); }
+document.getElementById('repo-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { e.preventDefault(); copyCmd(); }
 });
 </script>
 </body>
