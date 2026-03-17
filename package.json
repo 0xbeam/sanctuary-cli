@@ -4,7 +4,7 @@
   "description": "Agent-first architecture intelligence. Drop a git repo, get interactive architecture diagrams.",
   "type": "module",
   "bin": {
-    "parc": "./bin/cli.js"
+    "parc": "bin/cli.js"
   },
   "files": [
     "bin/",
@@ -29,7 +29,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xbeam/sanctuary-cli.git"
+    "url": "git+https://github.com/0xbeam/sanctuary-cli.git"
   },
   "homepage": "https://web-tau-seven-50.vercel.app",
   "dependencies": {

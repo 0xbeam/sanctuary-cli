@@ -480,10 +480,10 @@ h1 {
     <h1>parc</h1>
     <p class="tagline">Agent-first architecture intelligence</p>
     <div class="install-block" onclick="copyCmd(this)" role="button" tabindex="0">
-      <code><span class="prompt">$</span> npx parc-cli map ./your-repo</code>
+      <code><span class="prompt">$</span> npx github:0xbeam/sanctuary-cli map ./your-repo</code>
       <span class="copy-hint" id="copy-hint">click to copy</span>
     </div>
-    <p class="install-note">Or install globally: <code style="font-family:var(--mono);font-size:var(--text-sm);color:var(--text-secondary)">npm i -g parc-cli</code></p>
+    <p class="install-note">Or install globally: <code style="font-family:var(--mono);font-size:var(--text-sm);color:var(--text-secondary)">npm i -g github:0xbeam/sanctuary-cli</code></p>
   </div>
 
   <div class="section">
@@ -627,7 +627,7 @@ h1 {
 <script>
 function copyCmd(el) {
   var hint = document.getElementById('copy-hint');
-  navigator.clipboard.writeText('npx parc-cli map ./your-repo').then(function() {
+  navigator.clipboard.writeText('npx github:0xbeam/sanctuary-cli map ./your-repo').then(function() {
     hint.textContent = 'copied!';
     hint.style.color = 'var(--green)';
     setTimeout(function() { hint.textContent = 'click to copy'; hint.style.color = ''; }, 2000);
