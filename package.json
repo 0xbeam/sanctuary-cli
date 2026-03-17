@@ -1,17 +1,42 @@
 {
-  "name": "parc",
-  "private": true,
-  "version": "0.1.0",
+  "name": "parc-cli",
+  "version": "0.2.0",
+  "description": "Agent-first architecture intelligence. Drop a git repo, get interactive architecture diagrams.",
   "type": "module",
   "bin": {
     "parc": "./bin/cli.js"
   },
+  "files": [
+    "bin/",
+    "core/",
+    "templates/"
+  ],
   "scripts": {
     "map": "node bin/cli.js map",
     "serve": "node bin/cli.js serve"
   },
+  "keywords": [
+    "architecture",
+    "diagram",
+    "cli",
+    "agent",
+    "ai",
+    "codebase",
+    "analysis",
+    "visualization"
+  ],
+  "author": "Sanctuary <https://github.com/0xbeam>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xbeam/sanctuary-cli.git"
+  },
+  "homepage": "https://web-tau-seven-50.vercel.app",
   "dependencies": {
     "commander": "^13.1.0",
     "glob": "^11.0.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
