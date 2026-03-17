@@ -148,61 +148,40 @@ h1 {
   margin-bottom: var(--space-7);
 }
 
-/* Install input */
+/* Install */
 .install-block {
   display: inline-flex;
   align-items: center;
+  gap: var(--space-4);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 0;
-  overflow: hidden;
+  padding: var(--space-3) var(--space-5);
+  cursor: pointer;
   transition: border-color 200ms ease, box-shadow 200ms ease;
-  max-width: 520px;
-  width: 100%;
+  user-select: none;
 }
-.install-block:focus-within {
+.install-block:hover {
   border-color: var(--green);
   box-shadow: 0 0 0 3px var(--green-dim);
 }
-.install-prefix {
-  font-family: var(--mono);
-  font-size: var(--text-sm);
-  color: var(--green);
-  font-weight: 500;
-  padding: var(--space-3) 0 var(--space-3) var(--space-5);
-  flex-shrink: 0;
-  user-select: none;
-}
-.install-input {
+.install-block:active { background: var(--surface-hover); }
+.install-block code {
   font-family: var(--mono);
   font-size: var(--text-sm);
   color: var(--text-primary);
-  background: transparent;
-  border: none;
-  outline: none;
-  padding: var(--space-3) var(--space-2);
-  flex: 1;
-  min-width: 0;
   letter-spacing: 0.02em;
 }
-.install-input::placeholder { color: var(--text-faint); }
-.install-btn {
+.install-block .prompt { color: var(--green); font-weight: 500; }
+.install-block .copy-hint {
   font-family: var(--mono);
   font-size: var(--text-xs);
-  color: #fff;
-  background: var(--green);
-  border: none;
-  padding: var(--space-3) var(--space-5);
-  cursor: pointer;
-  flex-shrink: 0;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-weight: 500;
-  transition: background 150ms;
-  align-self: stretch;
+  color: var(--text-faint);
+  border-left: 1px solid var(--border);
+  padding-left: var(--space-4);
+  transition: color 150ms;
 }
-.install-btn:hover { background: var(--green-light); }
+.install-block:hover .copy-hint { color: var(--green); }
 
 .install-note {
   font-family: var(--sans);
@@ -500,12 +479,11 @@ h1 {
     <div class="logo-mark"><span>P</span></div>
     <h1>parc</h1>
     <p class="tagline">Agent-first architecture intelligence</p>
-    <div class="install-block">
-      <span class="install-prefix">$ npx parc map</span>
-      <input class="install-input" id="repo-input" type="text" placeholder="./your-repo" spellcheck="false" autocomplete="off">
-      <button class="install-btn" id="copy-btn" onclick="copyCmd()">Copy</button>
+    <div class="install-block" onclick="copyCmd(this)" role="button" tabindex="0">
+      <code><span class="prompt">$</span> npm i -g parc</code>
+      <span class="copy-hint" id="copy-hint">click to copy</span>
     </div>
-    <p class="install-note">Paste a repo path, then copy the full command.</p>
+    <p class="install-note">Then run <code style="font-family:var(--mono);font-size:var(--text-sm);color:var(--text-secondary)">parc map ./your-repo</code></p>
   </div>
 
   <div class="section">
@@ -647,19 +625,16 @@ h1 {
 </div>
 
 <script>
-function copyCmd() {
-  var input = document.getElementById('repo-input');
-  var repo = input.value.trim() || './your-repo';
-  var cmd = 'npx parc map ' + repo;
-  var btn = document.getElementById('copy-btn');
-  navigator.clipboard.writeText(cmd).then(function() {
-    btn.textContent = 'Copied';
-    btn.style.background = 'var(--green-light)';
-    setTimeout(function() { btn.textContent = 'Copy'; btn.style.background = ''; }, 2000);
+function copyCmd(el) {
+  var hint = document.getElementById('copy-hint');
+  navigator.clipboard.writeText('npm i -g parc').then(function() {
+    hint.textContent = 'copied!';
+    hint.style.color = 'var(--green)';
+    setTimeout(function() { hint.textContent = 'click to copy'; hint.style.color = ''; }, 2000);
   });
 }
-document.getElementById('repo-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') { e.preventDefault(); copyCmd(); }
+document.querySelector('.install-block').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyCmd(this); }
 });
 </script>
 </body>
