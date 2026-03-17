@@ -23,19 +23,38 @@
   --mono: 'DM Mono', monospace;
 }
 
-/* Dark mode */
+/* Dark mode — Gravity warm whites */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0F0F12; --card: #1A1A1F; --card-hover: #222228;
-    --border: #2A2A30; --text: #E8E6E1; --text-muted: #888; --text-faint: #555;
+    --border: #2A2A30; --text: #F6F5F2; --text-muted: #B8B5AE; --text-faint: #7A776F;
     --accent: #3DA87A; --accent-dim: #1A2E24; --accent-light: #4FC993;
     --amber: #D4A017; --amber-dim: #2A2210;
     --blue: #5DADE2; --blue-dim: #1A2030;
     --red: #E74C3C; --red-dim: #2A1510;
     --terminal-bg: #0A0A0D;
   }
-  .cmd-card:hover { background: var(--card-hover); }
+  h1 { color: #F6F5F2; }
+  .tagline { color: #B8B5AE; }
   .install-block { background: var(--card); border-color: var(--border); }
+  .install-block code { color: #F6F5F2; }
+  .install-note { color: var(--text-muted); }
+  .cmd-card { background: var(--card); }
+  .cmd-card:hover { background: var(--card-hover); border-color: var(--accent); }
+  .cmd-title { color: #F6F5F2; }
+  .cmd-desc { color: #B8B5AE; }
+  .section-label { color: var(--text-muted); }
+  .section-title { color: #F6F5F2; }
+  .step-title { color: #F6F5F2; }
+  .step-desc { color: #B8B5AE; }
+  .feat-title { color: #F6F5F2; }
+  .feat-desc { color: #B8B5AE; }
+  .compare-card { background: var(--card); }
+  .compare-list li { color: #B8B5AE; }
+  .footer-main { color: #B8B5AE; }
+  .footer-link { color: #7A776F; }
+  .terminal { color: #E8E6E1; }
+  .terminal .dim { color: #7A776F; }
 }
 
 html { font-size: 15px; scroll-behavior: smooth; }
@@ -53,10 +72,14 @@ h1 em { font-style: italic; font-weight: 300; color: var(--accent); }
 .tagline { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted); margin-bottom: 32px; }
 
 /* Install */
-.install-block { display: inline-flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; margin-bottom: 12px; transition: border-color 300ms ease; }
+.install-block { display: inline-flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; margin-bottom: 12px; transition: border-color 300ms ease; cursor: pointer; position: relative; }
 .install-block:hover { border-color: var(--accent); }
 .install-block code { font-family: var(--mono); font-size: 0.82rem; color: var(--text); }
 .install-block .prompt { color: var(--accent); }
+.install-block .copy-icon { font-size: 0.75rem; color: var(--text-faint); transition: color 200ms; }
+.install-block:hover .copy-icon { color: var(--accent); }
+.install-block.copied { border-color: var(--accent); }
+.install-block.copied .copy-icon { color: var(--accent); }
 .install-note { font-family: var(--mono); font-size: 0.65rem; color: var(--text-faint); }
 
 /* Commands section */
@@ -184,11 +207,24 @@ h1 em { font-style: italic; font-weight: 300; color: var(--accent); }
     <div class="logo-mark"><span>P</span></div>
     <h1>parc</h1>
     <p class="tagline">Agent-first architecture intelligence</p>
-    <div class="install-block">
+    <div class="install-block" onclick="copyCommand(this)">
       <code><span class="prompt">$</span> npx parc map ./your-repo</code>
+      <span class="copy-icon" id="copy-icon">⧉</span>
     </div>
     <p class="install-note">Drop any git repo. Get an interactive architecture map.</p>
   </div>
+
+<script>
+function copyCommand(el) {
+  navigator.clipboard.writeText('npx parc map ./your-repo').then(function() {
+    el.classList.add('copied');
+    var icon = el.querySelector('.copy-icon');
+    var orig = icon.textContent;
+    icon.textContent = '✓ copied';
+    setTimeout(function() { el.classList.remove('copied'); icon.textContent = orig; }, 1800);
+  });
+}
+</script>
 
   <!-- HOW IT WORKS -->
   <div class="how-it-works">
