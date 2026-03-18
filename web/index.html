@@ -940,6 +940,172 @@ h1 {
   .footer { flex-direction: column; gap: var(--space-4); text-align: center; }
 }
 
+/* ── Landing Feature Sections ── */
+.section { margin-bottom: var(--space-9); }
+
+/* ── Steps ── */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-7);
+}
+.step { text-align: center; }
+.step-num {
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--green);
+  margin-bottom: var(--space-3);
+}
+.step-title {
+  font-family: var(--serif);
+  font-size: var(--text-xl);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+.step-desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ── Detect Grid ── */
+.detect-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+.detect-item { padding: var(--space-3) 0; }
+.detect-label {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--green);
+  margin-bottom: var(--space-1);
+}
+.detect-title {
+  font-family: var(--serif);
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+.detect-desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* ── Comparison Cards ── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+.compare-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  position: relative;
+}
+.compare-card::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: var(--space-5);
+  right: var(--space-5);
+  height: 2px;
+  border-radius: 0 0 2px 2px;
+}
+.compare-card.old::after { background: var(--red); }
+.compare-card.new::after { background: var(--green); }
+.compare-label {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-4);
+}
+.compare-card.old .compare-label { color: var(--red); }
+.compare-card.new .compare-label { color: var(--green); }
+.compare-list { list-style: none; }
+.compare-list li {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  padding-left: var(--space-5);
+  position: relative;
+}
+.compare-list li::before {
+  position: absolute;
+  left: 0;
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+.compare-card.old .compare-list li::before { content: '\2013'; color: var(--red); }
+.compare-card.new .compare-list li::before { content: '\2713'; color: var(--green); }
+.compare-stat {
+  font-family: var(--serif);
+  font-size: var(--text-2xl);
+  font-weight: 300;
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+.compare-card.old .compare-stat { color: var(--red); }
+.compare-card.new .compare-stat { color: var(--green); }
+
+/* ── Terminal Demo ── */
+.terminal {
+  background: #1A1A1A;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  line-height: 1.8;
+  color: #B0ACA6;
+  overflow-x: auto;
+}
+.terminal .p { color: #4FC993; font-weight: 500; }
+.terminal .d { color: #5A5854; }
+.terminal .n { color: #D4A43A; }
+.terminal .w { color: #D4D0C8; }
+.terminal .line {
+  opacity: 0;
+  animation: reveal 0.25s ease forwards;
+}
+.terminal .line:nth-child(1)  { animation-delay: 0s; }
+.terminal .line:nth-child(2)  { animation-delay: 0.15s; }
+.terminal .line:nth-child(3)  { animation-delay: 0.3s; }
+.terminal .line:nth-child(4)  { animation-delay: 0.45s; }
+.terminal .line:nth-child(5)  { animation-delay: 0.8s; }
+.terminal .line:nth-child(6)  { animation-delay: 1.1s; }
+.terminal .line:nth-child(7)  { animation-delay: 1.25s; }
+.terminal .line:nth-child(8)  { animation-delay: 1.4s; }
+.terminal .line:nth-child(9)  { animation-delay: 1.55s; }
+.terminal .line:nth-child(10) { animation-delay: 2.0s; }
+.terminal .line:nth-child(11) { animation-delay: 2.15s; }
+.terminal .line:nth-child(12) { animation-delay: 2.5s; }
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.terminal .line:last-child::after {
+  content: '\2588';
+  color: #4FC993;
+  animation: blink 1s step-end infinite;
+  margin-left: 1px;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+@media (max-width: 640px) {
+  .steps { grid-template-columns: 1fr; gap: var(--space-6); }
+  .detect-grid { grid-template-columns: 1fr 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .spinner { animation: none; border-top-color: var(--green); }
   .install-block { transition: none; }
@@ -949,6 +1115,8 @@ h1 {
   .route-group summary::before { transition: none; }
   .agent-card-rich { transition: none; }
   .history-card { transition: none; }
+  .terminal .line { animation: none; opacity: 1; }
+  .terminal .line:last-child::after { animation: none; }
 }
 
 /* ── Top Navigation ── */
@@ -1368,6 +1536,111 @@ h1 {
     <div class="error-banner" id="error-banner"></div>
     <div class="rate-limit-banner" id="rate-limit-banner">
       GitHub API rate limit reached. Add a GitHub token (lock icon above) to get 5,000 requests/hour. Some file contents could not be fetched — results may be incomplete.
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="section">
+    <div class="section-label">How it works</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Drop a repo</div>
+        <div class="step-desc">Paste any public GitHub URL. No config, no setup, no dependencies.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Instant analysis</div>
+        <div class="step-desc">Routes, APIs, agents, components, database schema — detected in seconds.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Interactive dashboard</div>
+        <div class="step-desc">Six-tab dashboard. Searchable, exportable, shareable. Always current.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What it detects -->
+  <div class="section">
+    <div class="section-label">What it detects</div>
+    <div class="detect-grid">
+      <div class="detect-item">
+        <div class="detect-label">Frameworks</div>
+        <div class="detect-title">Next.js, Nuxt, Remix, FastAPI +</div>
+        <div class="detect-desc">Framework, version, runtime, and features like Tailwind, Supabase, Prisma, Zod.</div>
+      </div>
+      <div class="detect-item">
+        <div class="detect-label">Routes &amp; APIs</div>
+        <div class="detect-title">App Router, tRPC, GraphQL</div>
+        <div class="detect-desc">Every route and API endpoint with HTTP methods, auth detection, and schema types.</div>
+      </div>
+      <div class="detect-item">
+        <div class="detect-label">AI Agents</div>
+        <div class="detect-title">Models, tools &amp; connections</div>
+        <div class="detect-desc">Model name, temperature, system prompt, tools used, and agent-to-agent calls.</div>
+      </div>
+      <div class="detect-item">
+        <div class="detect-label">Components</div>
+        <div class="detect-title">UI &amp; feature split</div>
+        <div class="detect-desc">Base UI components separated from feature-level compositions.</div>
+      </div>
+      <div class="detect-item">
+        <div class="detect-label">Database</div>
+        <div class="detect-title">Tables &amp; migrations</div>
+        <div class="detect-desc">Prisma schemas and SQL migrations mapped to your data model.</div>
+      </div>
+      <div class="detect-item">
+        <div class="detect-label">Languages</div>
+        <div class="detect-title">TypeScript, Python, Go, Rust</div>
+        <div class="detect-desc">Multi-language support with framework detection for each ecosystem.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why parc -->
+  <div class="section">
+    <div class="section-label">Why parc</div>
+    <div class="compare-grid">
+      <div class="compare-card old">
+        <div class="compare-label">Manual documentation</div>
+        <ul class="compare-list">
+          <li>Diagrams go stale within a week</li>
+          <li>No single source of truth for agents</li>
+          <li>Grep through code to find endpoints</li>
+          <li>Onboarding takes days of exploration</li>
+        </ul>
+        <div class="compare-stat">Hours per update</div>
+      </div>
+      <div class="compare-card new">
+        <div class="compare-label">With parc</div>
+        <ul class="compare-list">
+          <li>Always-current analysis from source</li>
+          <li>Every agent cataloged with model and tools</li>
+          <li>All routes and endpoints mapped</li>
+          <li>New team members productive in minutes</li>
+        </ul>
+        <div class="compare-stat">30 seconds</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example output -->
+  <div class="section">
+    <div class="section-label">Example output</div>
+    <div class="terminal">
+<div class="line"><span class="p">$</span> <span class="w">parc analyze https://github.com/0xbeam/sanctuary-dashboard</span></div>
+<div class="line">&nbsp;</div>
+<div class="line"><span class="d">  parc</span></div>
+<div class="line"><span class="d">  ────────────────────────────────</span></div>
+<div class="line"><span class="d">  Repo:</span> <span class="w">0xbeam/sanctuary-dashboard</span></div>
+<div class="line">&nbsp;</div>
+<div class="line"><span class="d">  Scanning...</span></div>
+<div class="line"><span class="d">  Detected:</span></div>
+<div class="line"><span class="d">        </span> <span class="n">335</span> files, TypeScript + Next.js</div>
+<div class="line"><span class="d">        </span> <span class="n">61</span> routes, <span class="n">26</span> API endpoints</div>
+<div class="line"><span class="d">        </span> <span class="n">49</span> agents, <span class="n">107</span> components</div>
+<div class="line"><span class="d">  Dashboard ready.</span></div>
     </div>
   </div>
 
