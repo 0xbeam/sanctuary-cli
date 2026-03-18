@@ -331,28 +331,7 @@ h1 {
 }
 .dashboard.visible { display: block; }
 
-/* ── Overview Header ── */
-.overview-header {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-4);
-  margin-bottom: var(--space-5);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--border);
-}
-
-.repo-name {
-  font-family: var(--serif);
-  font-size: var(--text-2xl);
-  font-weight: 400;
-  color: var(--text-primary);
-}
-
-.repo-meta {
-  font-family: var(--mono);
-  font-size: var(--text-xs);
-  color: var(--text-tertiary);
-}
+/* ── Overview Header — see enhanced styles below ── */
 
 /* ── Stat Cards ── */
 .stat-row {
@@ -367,6 +346,18 @@ h1 {
   border-radius: var(--radius-md);
   padding: var(--space-4);
   text-align: center;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: stat-appear 400ms ease forwards;
+}
+.stat-card:nth-child(1) { animation-delay: 0ms; }
+.stat-card:nth-child(2) { animation-delay: 60ms; }
+.stat-card:nth-child(3) { animation-delay: 120ms; }
+.stat-card:nth-child(4) { animation-delay: 180ms; }
+.stat-card:nth-child(5) { animation-delay: 240ms; }
+.stat-card:nth-child(6) { animation-delay: 300ms; }
+@keyframes stat-appear {
+  to { opacity: 1; transform: translateY(0); }
 }
 .stat-value {
   font-family: var(--serif);
@@ -381,6 +372,13 @@ h1 {
   letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-top: var(--space-1);
+}
+.stat-subtitle {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--text-faint);
+  margin-top: 2px;
+  letter-spacing: 0.02em;
 }
 
 /* ── Tabs ── */
@@ -434,8 +432,8 @@ h1 {
 }
 
 /* ── Tab Panels ── */
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
+.tab-panel { display: none; opacity: 0; transform: translateY(6px); transition: opacity 200ms ease, transform 200ms ease; }
+.tab-panel.active { display: block; opacity: 1; transform: translateY(0); }
 
 /* ── Section Labels ── */
 .section-label {
@@ -563,36 +561,128 @@ h1 {
   color: var(--text-tertiary);
 }
 
-/* ── Agent Cards ── */
-.agent-card {
-  padding: var(--space-4) var(--space-5);
+/* ── Agent Cards (Rich) ── */
+.agent-card-rich {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-3);
-  transition: border-color 200ms;
+  transition: border-color 200ms, transform 200ms;
+  overflow: hidden;
 }
-.agent-card:hover { border-color: var(--border-strong); }
-.agent-header {
+.agent-card-rich:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+.agent-card-body {
+  display: grid;
+  grid-template-columns: 70% 30%;
+}
+.agent-card-main {
+  padding: var(--space-4) var(--space-5);
+}
+.agent-card-sidebar {
+  padding: var(--space-4) var(--space-4);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--surface-elevated);
+}
+.agent-card-header {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   margin-bottom: var(--space-2);
 }
-.agent-name {
+.agent-card-header .agent-name {
   font-family: var(--serif);
-  font-size: var(--text-lg);
+  font-size: var(--text-md);
   font-weight: 600;
   color: var(--text-primary);
 }
-.agent-desc {
+.tier-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+.tier-reasoning { background: var(--blue-dim); color: var(--blue); }
+.tier-reasoning-deep { background: var(--amber-dim); color: var(--amber); }
+.tier-extraction { background: var(--green-dim); color: var(--green); }
+.tier-unknown { background: var(--surface); color: var(--text-tertiary); }
+.agent-description {
   font-size: var(--text-sm);
   color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: var(--space-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  max-height: 3em;
+}
+.agent-description.has-description {
+  font-style: normal;
+}
+.agent-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
   margin-bottom: var(--space-2);
 }
-.agent-meta {
+.tool-pill {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--surface);
+  color: var(--text-tertiary);
+}
+.agent-connections {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+.agent-param {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.param-label {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.param-value {
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.model-value { color: var(--text-secondary); }
+.model-value.model-cheap { color: var(--green); }
+.model-value.model-expensive { color: var(--amber); }
+.agent-card-footer {
+  padding: var(--space-2) var(--space-5);
+  border-top: 1px solid var(--border);
+  background: var(--surface-elevated);
+}
+.agent-card-footer .agent-filepath {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+.agents-summary {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
+  margin-bottom: var(--space-4);
 }
 
 /* ── Overview Info Grid ── */
@@ -853,11 +943,405 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   .spinner { animation: none; border-top-color: var(--green); }
   .install-block { transition: none; }
+  .stat-card { opacity: 1; transform: none; animation: none; }
+  .tab-panel { transition: none; }
+  .view { transition: none; }
+  .route-group summary::before { transition: none; }
+  .agent-card-rich { transition: none; }
+  .history-card { transition: none; }
+}
+
+/* ── Top Navigation ── */
+.top-nav {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-3) var(--space-5);
+  align-items: center;
+  gap: var(--space-5);
+}
+.top-nav.visible {
+  display: flex;
+}
+.top-nav .nav-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--green);
+  border-radius: 7px;
+  flex-shrink: 0;
+}
+.top-nav .nav-logo span {
+  color: #fff;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  letter-spacing: 0.03em;
+}
+.nav-links {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+.nav-link {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  text-decoration: none;
+  padding: var(--space-2) 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.nav-link:hover {
+  color: var(--green);
+}
+.nav-link.active {
+  color: var(--green);
+  border-bottom-color: var(--green);
+}
+
+/* ── Views ── */
+.view {
+  display: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.view.active {
+  display: block;
+  opacity: 1;
+}
+
+/* ── Compact Input (Dashboard Header) ── */
+.compact-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.compact-input .compact-repo {
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.compact-input .compact-action {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--green);
+  text-decoration: none;
+  cursor: pointer;
+  margin-left: auto;
+  background: none;
+  border: none;
+  transition: color 150ms;
+}
+.compact-input .compact-action:hover {
+  color: var(--green-light);
+  text-decoration: underline;
+}
+
+/* ── History Cards ── */
+.history-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.history-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: border-color 200ms, transform 200ms;
+}
+.history-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+.history-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--surface);
+}
+.history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.history-repo {
+  font-family: var(--serif);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.history-owner {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+.history-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  margin-top: var(--space-1);
+}
+.history-stats .sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  flex-shrink: 0;
+}
+.history-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+.history-features .chip {
+  font-size: 0.58rem;
+  padding: 1px var(--space-2);
+}
+.history-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+.history-time {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+.history-actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+.history-actions button {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms;
+}
+.history-actions button:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+.history-actions .btn-delete:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.history-empty {
+  text-align: center;
+  padding: var(--space-9) var(--space-5);
+  color: var(--text-faint);
+  font-size: var(--text-sm);
+}
+.history-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+.history-header h2 {
+  font-family: var(--serif);
+  font-size: var(--text-2xl);
+  font-weight: 400;
+  color: var(--text-primary);
+}
+.nav-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  font-size: 0.56rem;
+  font-family: var(--mono);
+  font-weight: 500;
+  background: var(--green-dim);
+  color: var(--green);
+  border-radius: 8px;
+  padding: 0 4px;
+  margin-left: 4px;
+}
+
+/* ── Export Buttons ── */
+.export-actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-left: auto;
+}
+.export-btn {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  padding: var(--space-1) 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms;
+  white-space: nowrap;
+}
+.export-btn:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+/* ── Route Tree ── */
+.route-tree { margin-bottom: var(--space-5); }
+.route-group { margin-bottom: var(--space-2); }
+.route-group summary {
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: background 150ms;
+}
+.route-group summary:hover { background: var(--surface); }
+.route-group summary::before {
+  content: '\25B6';
+  font-size: 0.5rem;
+  color: var(--text-faint);
+  transition: transform 200ms;
+  display: inline-block;
+}
+.route-group[open] > summary::before {
+  transform: rotate(90deg);
+}
+.route-group summary .route-count {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  font-weight: 400;
+}
+.route-group .route-children {
+  padding-left: var(--space-5);
+  border-left: 1px solid var(--border);
+  margin-left: var(--space-3);
+  margin-top: var(--space-1);
+}
+.route-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+.route-item .route-path { flex: 1; word-break: break-all; }
+
+/* ── Repo Summary Paragraph ── */
+.repo-summary {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--green);
+}
+.repo-summary strong { color: var(--text-primary); font-weight: 500; }
+
+/* ── Dashboard Header Enhanced ── */
+.overview-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.repo-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  background: var(--surface);
+}
+.repo-header-info { flex: 1; min-width: 0; }
+.repo-header-info .repo-name {
+  font-family: var(--serif);
+  font-size: var(--text-2xl);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.repo-header-stats {
+  display: flex;
+  gap: var(--space-3);
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  align-items: center;
+}
+.repo-header-stats .stat-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+@media (max-width: 640px) {
+  .history-card { flex-direction: column; align-items: flex-start; }
+  .history-meta { flex-direction: row; align-items: center; width: 100%; }
+  .export-actions { margin-left: 0; margin-top: var(--space-2); }
+  .overview-header { flex-wrap: wrap; }
+  .repo-avatar { width: 36px; height: 36px; }
 }
 </style>
 </head>
 <body>
 <div class="page">
+
+  <!-- Top Navigation -->
+  <nav class="top-nav" id="top-nav">
+    <div class="nav-logo"><span>P</span></div>
+    <div class="nav-links">
+      <button class="nav-link active" data-view="dashboard" onclick="navigateTo('dashboard')">Dashboard</button>
+      <button class="nav-link" data-view="history" onclick="navigateTo('history')">History<span class="nav-badge" id="history-badge" style="display:none">0</span></button>
+      <button class="nav-link" data-view="changelog" onclick="navigateTo('changelog')">Changelog</button>
+    </div>
+  </nav>
+
+  <!-- View: Landing -->
+  <div class="view active" id="view-landing">
 
   <!-- Hero + Input -->
   <div class="hero">
@@ -887,6 +1371,17 @@ h1 {
     </div>
   </div>
 
+  </div><!-- /view-landing -->
+
+  <!-- View: Dashboard -->
+  <div class="view" id="view-dashboard">
+
+  <!-- Compact Input Bar -->
+  <div class="compact-input" id="compact-input" style="display:none">
+    <span class="compact-repo" id="compact-repo"></span>
+    <button class="compact-action" onclick="analyzeAnother()">Analyze another</button>
+  </div>
+
   <!-- Loading -->
   <div class="loading-area" id="loading-area">
     <div class="spinner"></div>
@@ -897,8 +1392,18 @@ h1 {
   <!-- Dashboard -->
   <div class="dashboard" id="dashboard">
     <div class="overview-header">
-      <div class="repo-name" id="repo-name"></div>
-      <div class="repo-meta" id="repo-meta"></div>
+      <img class="repo-avatar" id="repo-avatar" src="" alt="" loading="lazy" onerror="this.style.display='none'">
+      <div class="repo-header-info">
+        <div class="repo-name" id="repo-name"></div>
+        <div class="repo-header-stats" id="repo-header-stats"></div>
+      </div>
+      <div class="export-actions">
+        <button class="export-btn" onclick="exportJSON()" title="Download as JSON">JSON</button>
+        <button class="export-btn" onclick="exportMarkdown()" title="Download as Markdown">MD</button>
+        <button class="export-btn" onclick="copyShareLink()" title="Copy shareable link">
+          <span id="share-text">Share</span>
+        </button>
+      </div>
     </div>
 
     <div class="stat-row" id="stat-row"></div>
@@ -929,6 +1434,16 @@ h1 {
     </div>
   </div>
 
+  </div><!-- /view-dashboard -->
+
+  <!-- View: History -->
+  <div class="view" id="view-history">
+    <div id="history-container"></div>
+  </div>
+
+  <!-- View: Changelog -->
+  <div class="view" id="view-changelog">
+
   <!-- Changelog -->
   <div class="changelog-section">
     <div class="changelog-header">
@@ -937,7 +1452,29 @@ h1 {
     </div>
 
     <div class="changelog-entry latest">
-      <div class="changelog-version">v0.3.0 <span class="tag">latest</span></div>
+      <div class="changelog-version">v0.4.0 <span class="tag">latest</span></div>
+      <div class="changelog-date">March 18, 2026</div>
+      <ul class="changelog-items">
+        <li><span class="type type-feat">feat</span> Multi-view architecture — hash-based routing for Dashboard, History, Changelog views</li>
+        <li><span class="type type-feat">feat</span> Sticky top nav with Dashboard / History / Changelog links</li>
+        <li><span class="type type-feat">feat</span> Route detection for Nuxt, Astro, Remix, Express, Hono, FastAPI, Flask, Django</li>
+        <li><span class="type type-feat">feat</span> API detection for code-defined routes, tRPC procedures, and GraphQL schemas</li>
+        <li><span class="type type-feat">feat</span> Non-JS framework detection — Python (FastAPI/Flask/Django), Go (Gin/Echo/Fiber), Rust (Actix/Axum/Rocket)</li>
+        <li><span class="type type-feat">feat</span> Rich agent cards — model name, temperature, system prompt, max tokens, input keys, agent-to-agent calls</li>
+        <li><span class="type type-feat">feat</span> Expanded tool detection — http-client, web-scraping, embeddings, vector-db, email, payments, scheduling, filesystem, shell, cache</li>
+        <li><span class="type type-feat">feat</span> History tab — localStorage-based history (cap 20), view/delete previous analyses</li>
+        <li><span class="type type-feat">feat</span> Export — JSON download, Markdown download, copy shareable link</li>
+        <li><span class="type type-feat">feat</span> Auto-analyze via URL — share links like #/analyze/owner/repo</li>
+        <li><span class="type type-design">design</span> Stat cards with contextual subtitles and stagger animation</li>
+        <li><span class="type type-design">design</span> Collapsible route tree grouped by top-level segment</li>
+        <li><span class="type type-design">design</span> "What is this repo" summary paragraph at top of Overview</li>
+        <li><span class="type type-design">design</span> Dashboard header with repo avatar, star/fork counts</li>
+        <li><span class="type type-design">design</span> Tab panel slide-in transitions, prefers-reduced-motion support</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <div class="changelog-version">v0.3.0</div>
       <div class="changelog-date">March 18, 2026</div>
       <ul class="changelog-items">
         <li><span class="type type-feat">feat</span> Web app — paste any GitHub URL, get a live architecture dashboard in the browser</li>
@@ -1012,6 +1549,8 @@ h1 {
     </div>
   </div>
 
+  </div><!-- /view-changelog -->
+
   <div class="footer">
     <div class="footer-left">Built by agents & humans at <a href="https://github.com/0xbeam">Sanctuary</a></div>
     <div class="footer-links">
@@ -1029,6 +1568,7 @@ h1 {
 const API_BASE = 'https://api.github.com';
 let rateLimitHit = false;
 let remainingRequests = 60;
+let currentData = null;
 
 // ─── Token Management ───────────────────────────────────────────
 
@@ -1181,6 +1721,7 @@ function detectFramework(pkgJson) {
   else if (deps['astro']) { result.name = 'astro'; }
   else if (deps['vite'] && deps['react']) { result.name = 'vite-react'; }
   else if (deps['vite'] && deps['vue']) { result.name = 'vite-vue'; }
+  else if (deps['@remix-run/react'] || deps['@remix-run/node']) { result.name = 'remix'; }
   else if (deps['hono']) { result.name = 'hono'; }
   else if (deps['express']) { result.name = 'express'; }
   else if (deps['fastify']) { result.name = 'fastify'; }
@@ -1219,6 +1760,53 @@ function extractSvelteRoute(filePath) {
   return '/' + match[1];
 }
 
+function extractPagesRoute(filePath) {
+  const pagesIdx = filePath.indexOf('/pages/');
+  if (pagesIdx === -1) return '/';
+  const afterPages = filePath.slice(pagesIdx + '/pages/'.length);
+  const route = afterPages
+    .replace(/\.(tsx|jsx|js|ts)$/, '')
+    .replace(/\/index$/, '')
+    .replace(/^index$/, '');
+  return '/' + route;
+}
+
+function extractNuxtRoute(filePath) {
+  const pagesIdx = filePath.indexOf('/pages/');
+  if (pagesIdx === -1) return '/';
+  const afterPages = filePath.slice(pagesIdx + '/pages/'.length);
+  const route = afterPages
+    .replace(/\.vue$/, '')
+    .replace(/\/index$/, '')
+    .replace(/^index$/, '')
+    .replace(/_(\w+)/g, ':$1');
+  return '/' + route;
+}
+
+function extractAstroRoute(filePath) {
+  const pagesIdx = filePath.indexOf('/src/pages/');
+  if (pagesIdx === -1) return '/';
+  const afterPages = filePath.slice(pagesIdx + '/src/pages/'.length);
+  const route = afterPages
+    .replace(/\.(astro|md|mdx)$/, '')
+    .replace(/\/index$/, '')
+    .replace(/^index$/, '');
+  return '/' + route;
+}
+
+function extractRemixRoute(filePath) {
+  const routesIdx = filePath.indexOf('/app/routes/');
+  if (routesIdx === -1) return '/';
+  const afterRoutes = filePath.slice(routesIdx + '/app/routes/'.length);
+  const name = afterRoutes.replace(/\.(tsx|jsx|ts|js)$/, '');
+  if (name === '_index' || name === 'index') return '/';
+  const route = name
+    .replace(/\./g, '/')
+    .replace(/\$(\w+)/g, ':$1')
+    .replace(/_index$/, '');
+  return '/' + route.replace(/\/$/, '');
+}
+
 function detectRoutes(files, framework) {
   const routes = [];
 
@@ -1245,10 +1833,11 @@ function detectRoutes(files, framework) {
       (f.ext === '.tsx' || f.ext === '.jsx' || f.ext === '.js')
     );
     for (const f of pagesFiles) {
+      const routePath = extractPagesRoute(f.path);
       routes.push({
-        path: '/' + f.name.replace(/\.(tsx|jsx|js)$/, '').replace(/index$/, ''),
+        path: routePath || '/',
         file: f.path,
-        type: f.name.includes('[') ? 'dynamic' : 'static',
+        type: routePath.includes('[') ? 'dynamic' : 'static',
         framework: 'nextjs-pages',
       });
     }
@@ -1262,6 +1851,53 @@ function detectRoutes(files, framework) {
         file: f.path,
         type: f.path.includes('[') ? 'dynamic' : 'static',
         framework: 'sveltekit',
+      });
+    }
+  }
+
+  if (framework.name === 'nuxt') {
+    const nuxtPages = files.filter(f =>
+      f.path.includes('/pages/') && f.ext === '.vue'
+    );
+    for (const f of nuxtPages) {
+      const routePath = extractNuxtRoute(f.path);
+      routes.push({
+        path: routePath || '/',
+        file: f.path,
+        type: (routePath.includes('[') || routePath.includes(':')) ? 'dynamic' : 'static',
+        framework: 'nuxt',
+      });
+    }
+  }
+
+  if (framework.name === 'astro') {
+    const astroPages = files.filter(f =>
+      f.path.includes('/src/pages/') &&
+      (f.ext === '.astro' || f.ext === '.md' || f.ext === '.mdx')
+    );
+    for (const f of astroPages) {
+      const routePath = extractAstroRoute(f.path);
+      routes.push({
+        path: routePath || '/',
+        file: f.path,
+        type: routePath.includes('[') ? 'dynamic' : 'static',
+        framework: 'astro',
+      });
+    }
+  }
+
+  if (framework.name === 'remix') {
+    const remixFiles = files.filter(f =>
+      f.path.includes('/app/routes/') &&
+      (f.ext === '.tsx' || f.ext === '.jsx' || f.ext === '.ts' || f.ext === '.js')
+    );
+    for (const f of remixFiles) {
+      const routePath = extractRemixRoute(f.path);
+      routes.push({
+        path: routePath || '/',
+        file: f.path,
+        type: (routePath.includes(':') || routePath.includes('$')) ? 'dynamic' : 'static',
+        framework: 'remix',
       });
     }
   }
@@ -1307,6 +1943,159 @@ async function detectAPIEndpoints(files, framework, owner, repo, updateStatus) {
         auth: hasAuth,
       });
     }
+  } else {
+    // Code-defined routes for Express, Hono, Fastify, Flask, FastAPI, Django, etc.
+    const codeRouteExts = new Set(['.ts', '.js', '.py']);
+    const routeFiles = files.filter(f => {
+      if (!codeRouteExts.has(f.ext)) return false;
+      const lowerPath = f.path.toLowerCase();
+      const lowerName = f.name.toLowerCase();
+      return (
+        lowerPath.includes('/routes/') ||
+        lowerPath.includes('/router/') ||
+        lowerName === 'server.ts' || lowerName === 'server.js' ||
+        lowerName === 'app.ts' || lowerName === 'app.js' ||
+        lowerName === 'main.py' || lowerName === 'urls.py' ||
+        lowerName.includes('route') || lowerName.includes('router')
+      );
+    }).slice(0, 15);
+
+    for (let i = 0; i < routeFiles.length; i++) {
+      if (rateLimitHit) break;
+      const f = routeFiles[i];
+      updateStatus(`Scanning route file ${i + 1}/${routeFiles.length}: ${f.name}...`);
+      const content = await fetchFileContent(owner, repo, f.path);
+      if (!content) continue;
+
+      // Express / Hono / Fastify: app.get('/path', ...) or router.post('/path', ...)
+      const expressRe = /(?:app|router)\.(get|post|put|patch|delete)\s*\(\s*['"]((?:[^'"\\]|\\.)+)['"]/gmi;
+      let m;
+      while ((m = expressRe.exec(content)) !== null) {
+        endpoints.push({
+          path: m[2],
+          file: f.path,
+          methods: [m[1].toUpperCase()],
+          auth: false,
+        });
+      }
+
+      // FastAPI: @app.get('/path') or @router.post('/path')
+      const fastapiRe = /@(?:app|router)\.(get|post|put|patch|delete)\s*\(\s*['"]((?:[^'"\\]|\\.)+)['"]/gmi;
+      while ((m = fastapiRe.exec(content)) !== null) {
+        endpoints.push({
+          path: m[2],
+          file: f.path,
+          methods: [m[1].toUpperCase()],
+          auth: false,
+        });
+      }
+
+      // Flask: @app.route('/path', methods=['GET','POST']) or @blueprint.route(...)
+      const flaskRe = /@(?:app|blueprint)\s*\.route\s*\(\s*['"]((?:[^'"\\]|\\.)+)['"](?:.*?methods\s*=\s*\[([^\]]+)\])?/gmi;
+      while ((m = flaskRe.exec(content)) !== null) {
+        const routeMethods = m[2]
+          ? m[2].replace(/['"]/g, '').split(',').map(s => s.trim().toUpperCase()).filter(Boolean)
+          : ['GET'];
+        endpoints.push({
+          path: m[1],
+          file: f.path,
+          methods: routeMethods,
+          auth: false,
+        });
+      }
+
+      // Django: path('some/path', ...)
+      const djangoRe = /path\s*\(\s*['"]((?:[^'"\\]|\\.)+)['"]/gm;
+      while ((m = djangoRe.exec(content)) !== null) {
+        endpoints.push({
+          path: '/' + m[1].replace(/^\//, ''),
+          file: f.path,
+          methods: ['ALL'],
+          auth: false,
+        });
+      }
+    }
+
+    // tRPC detection
+    if (framework.features.includes('trpc')) {
+      const trpcFiles = files.filter(f =>
+        (f.ext === '.ts' || f.ext === '.js') &&
+        (f.path.includes('/trpc/') || f.name.toLowerCase().includes('router'))
+      ).slice(0, 5);
+
+      for (let i = 0; i < trpcFiles.length; i++) {
+        if (rateLimitHit) break;
+        const f = trpcFiles[i];
+        updateStatus(`Scanning tRPC router ${i + 1}/${trpcFiles.length}: ${f.name}...`);
+        const content = await fetchFileContent(owner, repo, f.path);
+        if (!content) continue;
+
+        // Match procedure definitions like: someProcedure: publicProcedure.query(...)
+        const queryRe = /(\w+)\s*[:=]\s*\w+(?:Procedure|Router)?\s*\.\s*query\s*\(/g;
+        while ((m = queryRe.exec(content)) !== null) {
+          endpoints.push({
+            path: `trpc.${m[1]}`,
+            file: f.path,
+            methods: ['query'],
+            auth: false,
+          });
+        }
+        const mutationRe = /(\w+)\s*[:=]\s*\w+(?:Procedure|Router)?\s*\.\s*mutation\s*\(/g;
+        while ((m = mutationRe.exec(content)) !== null) {
+          endpoints.push({
+            path: `trpc.${m[1]}`,
+            file: f.path,
+            methods: ['mutation'],
+            auth: false,
+          });
+        }
+      }
+    }
+
+    // GraphQL detection
+    if (framework.features.includes('graphql')) {
+      const gqlFiles = files.filter(f =>
+        f.ext === '.graphql' || f.ext === '.gql'
+      ).slice(0, 5);
+
+      for (let i = 0; i < gqlFiles.length; i++) {
+        if (rateLimitHit) break;
+        const f = gqlFiles[i];
+        updateStatus(`Scanning GraphQL schema ${i + 1}/${gqlFiles.length}: ${f.name}...`);
+        const content = await fetchFileContent(owner, repo, f.path);
+        if (!content) continue;
+
+        const queryBlock = content.match(/type\s+Query\s*\{([^}]+)\}/);
+        if (queryBlock) {
+          const fields = queryBlock[1].match(/^\s*(\w+)/gm);
+          if (fields) {
+            for (const field of fields) {
+              endpoints.push({
+                path: `Query.${field.trim()}`,
+                file: f.path,
+                methods: ['query'],
+                auth: false,
+              });
+            }
+          }
+        }
+
+        const mutationBlock = content.match(/type\s+Mutation\s*\{([^}]+)\}/);
+        if (mutationBlock) {
+          const fields = mutationBlock[1].match(/^\s*(\w+)/gm);
+          if (fields) {
+            for (const field of fields) {
+              endpoints.push({
+                path: `Mutation.${field.trim()}`,
+                file: f.path,
+                methods: ['mutation'],
+                auth: false,
+              });
+            }
+          }
+        }
+      }
+    }
   }
 
   return endpoints.sort((a, b) => a.path.localeCompare(b.path));
@@ -1326,6 +2115,9 @@ async function detectAgents(files, owner, repo, updateStatus) {
     )
   );
 
+  // Collect agent filenames for cross-referencing calls
+  const agentFileNames = agentFiles.map(f => basename(f.name, f.ext));
+
   for (let i = 0; i < agentFiles.length; i++) {
     const f = agentFiles[i];
     updateStatus(`Analyzing agent ${i + 1}/${agentFiles.length}...`);
@@ -1335,29 +2127,106 @@ async function detectAgents(files, owner, repo, updateStatus) {
     let description = '';
     let tools = [];
     let className = null;
+    let model = null;
+    let temperature = null;
+    let systemPromptSnippet = null;
+    let maxTokens = null;
+    let inputKeys = null;
+    let callsAgents = [];
 
     if (content) {
+      // Tier detection (existing)
       if (content.includes('extraction') || content.includes('haiku') || content.includes('gpt-3.5') || content.includes('flash')) tier = 'extraction';
       else if (content.includes('reasoning') || content.includes('sonnet') || content.includes('claude') || content.includes('gpt-4')) tier = 'reasoning';
       else if (content.includes('opus')) tier = 'reasoning-deep';
 
+      // Description
       const descMatch = content.match(/description['":\s]+['"]([^'"]+)['"]/i);
       if (descMatch) description = descMatch[1];
 
+      // Class name
       const classMatch = content.match(/class\s+(\w+)/);
       if (classMatch) className = classMatch[1];
 
+      // Model name
+      const modelPatterns = [
+        /model['":\s]+['"]([^'"]+)['"]/,
+        /modelId['":\s]+['"]([^'"]+)['"]/,
+        /anthropic\(\s*['"]([^'"]+)['"]/,
+        /openai\(\s*['"]([^'"]+)['"]/
+      ];
+      for (const pat of modelPatterns) {
+        const m = content.match(pat);
+        if (m) { model = m[1]; break; }
+      }
+
+      // Temperature
+      const tempMatch = content.match(/temperature['":\s]+([\d.]+)/);
+      if (tempMatch) temperature = tempMatch[1];
+
+      // System prompt snippet
+      const sysPatterns = [
+        /system['":\s]+['"`]([^'"`]{1,150})/,
+        /systemPrompt['":\s]+['"`]([^'"`]{1,150})/
+      ];
+      for (const pat of sysPatterns) {
+        const m = content.match(pat);
+        if (m) { systemPromptSnippet = m[1]; break; }
+      }
+
+      // Max tokens
+      const maxTokMatch = content.match(/max_?[Tt]okens['":\s]+(\d+)/);
+      if (maxTokMatch) maxTokens = maxTokMatch[1];
+
+      // Input/output schema keys (Zod)
+      const zodMatch = content.match(/z\.object\(\{([^}]{1,300})\}/);
+      if (zodMatch) {
+        const keyMatches = zodMatch[1].match(/(\w+)\s*:/g);
+        if (keyMatches) {
+          inputKeys = keyMatches.map(k => k.replace(/\s*:$/, ''));
+        }
+      }
+
+      // Agent-to-agent calls
+      const currentBasename = basename(f.name, f.ext);
+      for (const otherName of agentFileNames) {
+        if (otherName === currentBasename) continue;
+        // Check for import patterns or direct references
+        const importPat = new RegExp('from\\s+[\'"].*' + otherName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[\'"]', 'i');
+        const refPat = new RegExp(otherName.replace(/-/g, '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+        if (importPat.test(content) || refPat.test(content)) {
+          const prettyName = otherName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+          callsAgents.push(prettyName);
+        }
+      }
+
+      // Tool detection (existing 4)
       if (content.includes('tavily') || content.includes('TavilyClient')) tools.push('tavily');
       if (content.includes('generateObject')) tools.push('structured-output');
       if (content.includes('generateText')) tools.push('text-generation');
       if (content.includes('supabase') || content.includes('createDb')) tools.push('database');
+
+      // Expanded tool detection
+      if (/\bfetch\s*\(|axios/i.test(content)) tools.push('http-client');
+      if (/cheerio|puppeteer|playwright/i.test(content)) tools.push('web-scraping');
+      if (/embeddings|\.embed\b/i.test(content)) tools.push('embeddings');
+      if (/vectorStore|pinecone|qdrant|weaviate|chromadb/i.test(content)) tools.push('vector-db');
+      if (/sendEmail|resend|nodemailer|\bses\b/i.test(content)) tools.push('email');
+      if (/stripe/i.test(content)) tools.push('payments');
+      if (/\bcron\b|schedule/i.test(content)) tools.push('scheduling');
+      if (/\bfs\b|readFile|writeFile/i.test(content)) tools.push('filesystem');
+      if (/\bexec\b|spawn|child_process/i.test(content)) tools.push('shell');
+      if (/\bredis\b|cache/i.test(content)) tools.push('cache');
     }
 
     const name = basename(f.name, f.ext)
       .replace(/-/g, ' ')
       .replace(/\b\w/g, c => c.toUpperCase());
 
-    agents.push({ name, file: f.path, tier, description, tools, className });
+    agents.push({
+      name, file: f.path, tier, description, tools, className,
+      model, temperature, systemPromptSnippet, maxTokens, inputKeys, callsAgents
+    });
   }
 
   return agents;
@@ -1483,25 +2352,42 @@ function setStatus(msg) {
 }
 
 function showDashboard(data) {
+  currentData = data;
   const el = document.getElementById('dashboard');
   el.classList.add('visible');
 
-  // Header
+  // Header with avatar
   document.getElementById('repo-name').textContent = data.name;
-  const metaParts = [data.framework.name !== 'unknown' ? data.framework.name : null, data.repoInfo.description].filter(Boolean);
-  document.getElementById('repo-meta').textContent = metaParts.join(' \u2014 ');
+  document.getElementById('repo-avatar').src = `https://github.com/${data.owner}.png?size=96`;
+  document.getElementById('repo-avatar').style.display = '';
 
-  // Stats
+  // Header stats line
+  const headerStatParts = [];
+  if (data.framework.name !== 'unknown') headerStatParts.push(data.framework.name);
+  if (data.repoInfo.stars != null) headerStatParts.push(`\u2605 ${data.repoInfo.stars.toLocaleString()}`);
+  if (data.repoInfo.forks != null) headerStatParts.push(`\u2442 ${data.repoInfo.forks.toLocaleString()}`);
+  if (data.repoInfo.description) headerStatParts.push(data.repoInfo.description);
+  document.getElementById('repo-header-stats').innerHTML = headerStatParts.map((p, i) =>
+    (i > 0 ? '<span class="stat-sep"></span>' : '') + `<span>${esc(p)}</span>`
+  ).join('');
+
+  // Stats with contextual subtitles
+  const dynamicRoutes = data.routes.filter(r => r.type === 'dynamic').length;
+  const staticRoutes = data.routes.filter(r => r.type === 'static').length;
+  const authApis = data.api.filter(e => e.auth).length;
+  const reasoningAgents = data.agents.filter(a => a.tier === 'reasoning' || a.tier === 'reasoning-deep').length;
+  const uiComps = data.components.filter(c => c.type === 'ui').length;
+
   const stats = [
-    { value: data.summary.totalFiles, label: 'Files' },
-    { value: data.routes.length, label: 'Routes' },
-    { value: data.api.length, label: 'API Endpoints' },
-    { value: data.agents.length, label: 'Agents' },
-    { value: data.components.length, label: 'Components' },
-    { value: data.database.tables.length, label: 'Tables' },
+    { value: data.summary.totalFiles, label: 'Files', subtitle: data.summary.languages.slice(0, 2).join(', ') },
+    { value: data.routes.length, label: 'Routes', subtitle: dynamicRoutes > 0 ? `${dynamicRoutes} dynamic` : staticRoutes > 0 ? `${staticRoutes} static` : '' },
+    { value: data.api.length, label: 'API Endpoints', subtitle: authApis > 0 ? `${authApis} with auth` : '' },
+    { value: data.agents.length, label: 'Agents', subtitle: reasoningAgents > 0 ? `${reasoningAgents} reasoning-tier` : '' },
+    { value: data.components.length, label: 'Components', subtitle: uiComps > 0 ? `${uiComps} UI primitives` : '' },
+    { value: data.database.tables.length, label: 'Tables', subtitle: '' },
   ];
   document.getElementById('stat-row').innerHTML = stats.map(s =>
-    `<div class="stat-card"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>`
+    `<div class="stat-card"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>${s.subtitle ? `<div class="stat-subtitle">${esc(s.subtitle)}</div>` : ''}</div>`
   ).join('');
 
   // Tab badges
@@ -1523,9 +2409,43 @@ function showDashboard(data) {
   renderDatabase(data.database);
 }
 
+function buildRepoSummary(data) {
+  const fw = data.framework.name !== 'unknown' ? data.framework.name : null;
+  const langs = data.summary.languages.slice(0, 3);
+  const parts = [];
+
+  parts.push(`<strong>${esc(data.owner)}/${esc(data.name)}</strong>`);
+
+  if (data.repoInfo.description) {
+    parts.push(esc(data.repoInfo.description).toLowerCase().replace(/\.$/, ''));
+  }
+
+  const techParts = [];
+  if (fw) techParts.push(`built with <strong>${esc(fw)}</strong>`);
+  if (langs.length > 0) techParts.push(`using ${langs.map(l => `<strong>${esc(l)}</strong>`).join(', ')}`);
+  if (techParts.length > 0) parts.push(techParts.join(' '));
+
+  const archParts = [];
+  if (data.routes.length > 0) archParts.push(`${data.routes.length} route${data.routes.length !== 1 ? 's' : ''}`);
+  if (data.api.length > 0) archParts.push(`${data.api.length} API endpoint${data.api.length !== 1 ? 's' : ''}`);
+  if (data.agents.length > 0) archParts.push(`${data.agents.length} AI agent${data.agents.length !== 1 ? 's' : ''}`);
+  if (data.components.length > 0) archParts.push(`${data.components.length} component${data.components.length !== 1 ? 's' : ''}`);
+  if (data.database.tables.length > 0) archParts.push(`${data.database.tables.length} database table${data.database.tables.length !== 1 ? 's' : ''}`);
+  if (archParts.length > 0) parts.push('The architecture includes ' + archParts.join(', '));
+
+  const features = data.framework.features.slice(0, 5);
+  if (features.length > 0) parts.push('Key integrations: ' + features.map(f => `<strong>${esc(f)}</strong>`).join(', '));
+
+  return parts.join('. ') + '.';
+}
+
 function renderOverview(data) {
   const panel = document.getElementById('panel-overview');
-  let html = '<div class="info-grid">';
+
+  // Repo summary paragraph
+  let html = `<div class="repo-summary">${buildRepoSummary(data)}</div>`;
+
+  html += '<div class="info-grid">';
 
   // Framework info
   html += '<div class="info-block"><h3>Framework</h3>';
@@ -1575,7 +2495,7 @@ function renderOverview(data) {
 function renderRoutes(routes) {
   const panel = document.getElementById('panel-routes');
   if (routes.length === 0) {
-    panel.innerHTML = '<div class="empty-state">No routes detected. This analyzer looks for Next.js App Router (page.tsx) and SvelteKit (+page.svelte) conventions.</div>';
+    panel.innerHTML = '<div class="empty-state">No routes detected. This analyzer supports Next.js, Nuxt, SvelteKit, Astro, Remix, Express, Hono, FastAPI, and more.</div>';
     return;
   }
 
@@ -1587,16 +2507,48 @@ function renderRoutes(routes) {
     <span class="chip">${dynamicCount} dynamic</span>
   </div>`;
 
-  html += '<table class="data-table"><thead><tr><th>Route</th><th>Type</th><th>File</th></tr></thead><tbody>';
+  // Group routes by top-level segment
+  const groups = {};
   for (const r of routes) {
-    const typeBadge = r.type === 'dynamic' ? '<span class="badge badge-amber">dynamic</span>' : '<span class="badge badge-green">static</span>';
-    html += `<tr>
-      <td><strong style="font-family:var(--mono);font-size:var(--text-xs)">${esc(r.path)}</strong></td>
-      <td>${typeBadge}</td>
-      <td class="mono-path">${esc(r.file)}</td>
-    </tr>`;
+    const segments = r.path.replace(/^\//, '').split('/');
+    const topSegment = segments[0] || '(root)';
+    if (!groups[topSegment]) groups[topSegment] = [];
+    groups[topSegment].push(r);
   }
-  html += '</tbody></table>';
+
+  // If 5 or fewer groups, show as collapsible tree; otherwise flat table fallback
+  const groupKeys = Object.keys(groups).sort();
+  if (groupKeys.length <= 30) {
+    html += '<div class="route-tree">';
+    for (const key of groupKeys) {
+      const groupRoutes = groups[key];
+      const open = groupKeys.length <= 8 ? ' open' : '';
+      html += `<details class="route-group"${open}>
+        <summary>/${esc(key)} <span class="route-count">${groupRoutes.length}</span></summary>
+        <div class="route-children">`;
+      for (const r of groupRoutes) {
+        const typeBadge = r.type === 'dynamic' ? '<span class="badge badge-amber" style="font-size:0.5rem">dynamic</span>' : '';
+        html += `<div class="route-item">
+          <span class="route-path">${esc(r.path)}</span>
+          ${typeBadge}
+        </div>`;
+      }
+      html += '</div></details>';
+    }
+    html += '</div>';
+  } else {
+    html += '<table class="data-table"><thead><tr><th>Route</th><th>Type</th><th>File</th></tr></thead><tbody>';
+    for (const r of routes) {
+      const typeBadge = r.type === 'dynamic' ? '<span class="badge badge-amber">dynamic</span>' : '<span class="badge badge-green">static</span>';
+      html += `<tr>
+        <td><strong style="font-family:var(--mono);font-size:var(--text-xs)">${esc(r.path)}</strong></td>
+        <td>${typeBadge}</td>
+        <td class="mono-path">${esc(r.file)}</td>
+      </tr>`;
+    }
+    html += '</tbody></table>';
+  }
+
   panel.innerHTML = html;
 }
 
@@ -1638,25 +2590,66 @@ function renderAgents(agents) {
   const tierCounts = {};
   agents.forEach(a => { tierCounts[a.tier] = (tierCounts[a.tier] || 0) + 1; });
 
-  let html = '<div class="chip-row" style="margin-bottom:var(--space-4)">';
-  for (const [tier, count] of Object.entries(tierCounts)) {
-    html += `<span class="chip">${count} ${tier}</span>`;
+  // Summary header
+  let html = '<div class="agents-summary">';
+  const tierOrder = ['reasoning', 'reasoning-deep', 'extraction', 'unknown'];
+  for (const tier of tierOrder) {
+    if (tierCounts[tier]) {
+      html += `<span class="tier-badge tier-${tier}">${tierCounts[tier]} ${tier}</span>`;
+    }
   }
   html += '</div>';
 
+  // Helper: model cost class
+  function modelCostClass(model) {
+    if (!model) return '';
+    const m = model.toLowerCase();
+    if (/haiku|flash|gpt-3\.5|gpt-3|mini/.test(m)) return 'model-cheap';
+    if (/opus|gpt-4|o1|o3/.test(m)) return 'model-expensive';
+    return '';
+  }
+
   for (const a of agents) {
-    const tierBadge = a.tier === 'reasoning' ? 'badge-blue' : a.tier === 'reasoning-deep' ? 'badge-amber' : a.tier === 'extraction' ? 'badge-green' : 'badge-neutral';
-    html += `<div class="agent-card">
-      <div class="agent-header">
-        <div class="agent-name">${esc(a.name)}</div>
-        <span class="badge ${tierBadge}">${a.tier}</span>
+    const tierClass = 'tier-' + a.tier;
+    const descText = a.description || a.systemPromptSnippet || '';
+    const descClass = a.description ? 'agent-description has-description' : 'agent-description';
+
+    // Build sidebar params (only show if value exists)
+    let sidebarHtml = '';
+    if (a.model) {
+      sidebarHtml += `<div class="agent-param"><span class="param-label">Model</span><span class="param-value model-value ${modelCostClass(a.model)}">${esc(a.model)}</span></div>`;
+    }
+    if (a.temperature) {
+      sidebarHtml += `<div class="agent-param"><span class="param-label">Temperature</span><span class="param-value">${esc(a.temperature)}</span></div>`;
+    }
+    if (a.maxTokens) {
+      sidebarHtml += `<div class="agent-param"><span class="param-label">Max tokens</span><span class="param-value">${esc(a.maxTokens)}</span></div>`;
+    }
+    if (a.inputKeys && a.inputKeys.length > 0) {
+      sidebarHtml += `<div class="agent-param"><span class="param-label">Input</span><span class="param-value">${esc(a.inputKeys.join(', '))}</span></div>`;
+    }
+    if (a.className) {
+      sidebarHtml += `<div class="agent-param"><span class="param-label">Class</span><span class="param-value">${esc(a.className)}</span></div>`;
+    }
+
+    const hasSidebar = sidebarHtml.length > 0;
+
+    html += `<div class="agent-card-rich">
+      <div class="agent-card-body"${!hasSidebar ? ' style="grid-template-columns:1fr"' : ''}>
+        <div class="agent-card-main">
+          <div class="agent-card-header">
+            <span class="agent-name">${esc(a.name)}</span>
+            <span class="tier-badge ${tierClass}">${a.tier}</span>
+          </div>
+          ${descText ? `<div class="${descClass}">${esc(descText)}</div>` : ''}
+          ${a.tools.length > 0 ? `<div class="agent-tools">${a.tools.map(t => `<span class="tool-pill">${esc(t)}</span>`).join('')}</div>` : ''}
+          ${a.callsAgents && a.callsAgents.length > 0 ? `<div class="agent-connections">Calls: ${esc(a.callsAgents.join(', '))}</div>` : ''}
+        </div>
+        ${hasSidebar ? `<div class="agent-card-sidebar">${sidebarHtml}</div>` : ''}
       </div>
-      ${a.description ? `<div class="agent-desc">${esc(a.description)}</div>` : ''}
-      <div class="agent-meta">
-        ${a.tools.map(t => `<span class="badge badge-neutral">${esc(t)}</span>`).join('')}
-        ${a.className ? `<span class="badge badge-neutral">class: ${esc(a.className)}</span>` : ''}
+      <div class="agent-card-footer">
+        <span class="agent-filepath">${esc(a.file)}</span>
       </div>
-      <div class="mono-path" style="margin-top:var(--space-2)">${esc(a.file)}</div>
     </div>`;
   }
   panel.innerHTML = html;
@@ -1764,6 +2757,9 @@ async function startAnalysis() {
   setProgress(5);
   setStatus('Fetching repository info...');
 
+  // Switch to dashboard view to show loading spinner
+  navigateTo('dashboard');
+
   try {
     // Step 1: Get repo info
     const repoInfo = await fetchDefaultBranch(parsed.owner, parsed.repo);
@@ -1783,6 +2779,76 @@ async function startAnalysis() {
       try { pkgJson = JSON.parse(pkgContent); } catch {}
     }
     const framework = detectFramework(pkgJson);
+
+    // Step 3b: Non-JS framework detection if still unknown
+    if (framework.name === 'unknown') {
+      let detected = false;
+      let extraFetches = 0;
+
+      // Try Python first
+      if (!detected && extraFetches < 3) {
+        const reqFile = files.find(f => f.name === 'requirements.txt');
+        if (reqFile) {
+          setStatus('Checking requirements.txt...');
+          const reqContent = await fetchFileContent(parsed.owner, parsed.repo, reqFile.path);
+          extraFetches++;
+          if (reqContent) {
+            const lower = reqContent.toLowerCase();
+            if (lower.includes('fastapi')) { framework.name = 'fastapi'; framework.runtime = 'python'; detected = true; }
+            else if (lower.includes('flask')) { framework.name = 'flask'; framework.runtime = 'python'; detected = true; }
+            else if (lower.includes('django')) { framework.name = 'django'; framework.runtime = 'python'; detected = true; }
+          }
+        }
+        if (!detected && extraFetches < 3) {
+          const pyprojectFile = files.find(f => f.name === 'pyproject.toml');
+          if (pyprojectFile) {
+            setStatus('Checking pyproject.toml...');
+            const pyContent = await fetchFileContent(parsed.owner, parsed.repo, pyprojectFile.path);
+            extraFetches++;
+            if (pyContent) {
+              const lower = pyContent.toLowerCase();
+              if (lower.includes('fastapi')) { framework.name = 'fastapi'; framework.runtime = 'python'; detected = true; }
+              else if (lower.includes('flask')) { framework.name = 'flask'; framework.runtime = 'python'; detected = true; }
+              else if (lower.includes('django')) { framework.name = 'django'; framework.runtime = 'python'; detected = true; }
+            }
+          }
+        }
+      }
+
+      // Try Go
+      if (!detected && extraFetches < 3) {
+        const goModFile = files.find(f => f.name === 'go.mod');
+        if (goModFile) {
+          setStatus('Checking go.mod...');
+          const goContent = await fetchFileContent(parsed.owner, parsed.repo, goModFile.path);
+          extraFetches++;
+          if (goContent) {
+            const lower = goContent.toLowerCase();
+            if (lower.includes('gin-gonic/gin')) { framework.name = 'gin'; framework.runtime = 'go'; detected = true; }
+            else if (lower.includes('labstack/echo')) { framework.name = 'echo'; framework.runtime = 'go'; detected = true; }
+            else if (lower.includes('gofiber/fiber')) { framework.name = 'fiber'; framework.runtime = 'go'; detected = true; }
+            else if (lower.includes('go-chi/chi')) { framework.name = 'chi'; framework.runtime = 'go'; detected = true; }
+          }
+        }
+      }
+
+      // Try Rust
+      if (!detected && extraFetches < 3) {
+        const cargoFile = files.find(f => f.name === 'Cargo.toml');
+        if (cargoFile) {
+          setStatus('Checking Cargo.toml...');
+          const cargoContent = await fetchFileContent(parsed.owner, parsed.repo, cargoFile.path);
+          extraFetches++;
+          if (cargoContent) {
+            const lower = cargoContent.toLowerCase();
+            if (lower.includes('actix-web')) { framework.name = 'actix-web'; framework.runtime = 'rust'; detected = true; }
+            else if (lower.includes('axum')) { framework.name = 'axum'; framework.runtime = 'rust'; detected = true; }
+            else if (lower.includes('rocket')) { framework.name = 'rocket'; framework.runtime = 'rust'; detected = true; }
+          }
+        }
+      }
+    }
+
     setProgress(40);
 
     // Step 4: Detect routes (from file tree only — no fetches needed)
@@ -1856,6 +2922,14 @@ async function startAnalysis() {
 
     setLoading(false);
     showDashboard(data);
+    saveToHistory(data, parsed);
+
+    // Show top nav and switch to dashboard view
+    hasAnalyzed = true;
+    document.querySelector('.top-nav').classList.add('visible');
+    document.getElementById('compact-input').style.display = 'flex';
+    document.getElementById('compact-repo').textContent = parsed.owner + '/' + parsed.repo;
+    navigateTo('dashboard');
 
     if (rateLimitHit) {
       document.getElementById('rate-limit-banner').classList.add('visible');
@@ -1863,6 +2937,8 @@ async function startAnalysis() {
 
   } catch (err) {
     setLoading(false);
+    // Navigate back to landing to show the error
+    navigateTo('landing');
     if (err.message === 'RATE_LIMIT') {
       document.getElementById('rate-limit-banner').classList.add('visible');
       showError('GitHub API rate limit reached. Please wait and try again later.');
@@ -1895,6 +2971,326 @@ function copyCmd() {
 document.querySelector('.install-block').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyCmd(); }
 });
+
+// ─── Hash-Based Router ───────────────────────────────────────────
+
+let hasAnalyzed = false;
+
+function navigateTo(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = document.getElementById('view-' + viewId);
+  if (target) target.classList.add('active');
+  // Update nav active state
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  const activeLink = document.querySelector(`.nav-link[data-view="${viewId}"]`);
+  if (activeLink) activeLink.classList.add('active');
+  // Update hash without triggering hashchange
+  history.replaceState(null, '', '#/' + viewId);
+  // Scroll to top on view change
+  window.scrollTo(0, 0);
+  // Render history when navigating to it
+  if (viewId === 'history') renderHistoryView();
+}
+
+function handleRoute() {
+  const hash = window.location.hash || '';
+  const path = hash.replace(/^#\/?/, '');
+
+  if (!path || path === 'landing') {
+    if (!hasAnalyzed) {
+      navigateTo('landing');
+    } else {
+      navigateTo('dashboard');
+    }
+    return;
+  }
+
+  if (path === 'dashboard') {
+    if (hasAnalyzed) {
+      navigateTo('dashboard');
+    } else {
+      navigateTo('landing');
+    }
+    return;
+  }
+
+  if (path === 'changelog') {
+    navigateTo('changelog');
+    return;
+  }
+
+  if (path === 'history') {
+    navigateTo('history');
+    return;
+  }
+
+  // Handle #/analyze/owner/repo
+  const analyzeMatch = path.match(/^analyze\/([^\/]+)\/([^\/]+)$/);
+  if (analyzeMatch) {
+    const owner = analyzeMatch[1];
+    const repo = analyzeMatch[2];
+    document.getElementById('repo-input').value = `https://github.com/${owner}/${repo}`;
+    navigateTo('landing');
+    setTimeout(() => startAnalysis(), 50);
+    return;
+  }
+
+  // Default to landing
+  navigateTo('landing');
+}
+
+function analyzeAnother() {
+  navigateTo('landing');
+  document.getElementById('repo-input').focus();
+}
+
+window.addEventListener('hashchange', handleRoute);
+
+// On initial load, route based on hash
+document.addEventListener('DOMContentLoaded', function() {
+  const hash = window.location.hash || '';
+  if (hash && hash !== '#/' && hash !== '#/landing') {
+    handleRoute();
+  }
+  updateHistoryBadge();
+});
+
+// ─── History ──────────────────────────────────────────────────────
+
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  const days = Math.floor(hrs / 24);
+  if (days < 30) return days + 'd ago';
+  return new Date(ts).toLocaleDateString();
+}
+
+function saveToHistory(data, parsed) {
+  const history = JSON.parse(localStorage.getItem('parc_history') || '[]');
+  const existing = history.findIndex(h => h.owner === parsed.owner && h.repo === parsed.repo);
+  if (existing !== -1) history.splice(existing, 1);
+
+  const entry = {
+    id: crypto.randomUUID(),
+    timestamp: Date.now(),
+    owner: parsed.owner,
+    repo: parsed.repo,
+    url: `https://github.com/${parsed.owner}/${parsed.repo}`,
+    framework: data.framework?.name || 'unknown',
+    stats: {
+      files: data.summary?.totalFiles || 0,
+      routes: data.routes?.length || 0,
+      apis: data.api?.length || 0,
+      agents: data.agents?.length || 0,
+      components: data.components?.length || 0,
+      tables: data.database?.tables?.length || 0,
+    },
+    repoInfo: data.repoInfo || {},
+    features: data.framework?.features || [],
+    fullData: data,
+  };
+  history.unshift(entry);
+  if (history.length > 20) history.pop();
+  localStorage.setItem('parc_history', JSON.stringify(history));
+  updateHistoryBadge();
+}
+
+function updateHistoryBadge() {
+  const history = JSON.parse(localStorage.getItem('parc_history') || '[]');
+  const badge = document.getElementById('history-badge');
+  if (!badge) return;
+  if (history.length > 0) {
+    badge.textContent = history.length;
+    badge.style.display = 'inline-flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderHistoryView() {
+  const container = document.getElementById('history-container');
+  const history = JSON.parse(localStorage.getItem('parc_history') || '[]');
+
+  if (history.length === 0) {
+    container.innerHTML = '<div class="history-empty">No previous analyses yet. Analyze a repository to see it here.</div>';
+    return;
+  }
+
+  let html = '<div class="history-header"><h2>History</h2></div>';
+  html += '<div class="history-grid">';
+
+  for (const entry of history) {
+    const s = entry.stats || {};
+    const fwBadge = entry.framework && entry.framework !== 'unknown'
+      ? `<span class="badge badge-green">${esc(entry.framework)}</span>`
+      : '';
+    const stars = entry.repoInfo?.stars != null
+      ? `<span>${Number(entry.repoInfo.stars).toLocaleString()} stars</span><span class="sep"></span>`
+      : '';
+
+    const statParts = [];
+    if (s.files) statParts.push(s.files + ' files');
+    if (s.routes) statParts.push(s.routes + ' routes');
+    if (s.apis) statParts.push(s.apis + ' APIs');
+    if (s.agents) statParts.push(s.agents + ' agents');
+    if (s.components) statParts.push(s.components + ' components');
+    const statHtml = statParts.map((p, i) =>
+      (i > 0 ? '<span class="sep"></span>' : '') + '<span>' + esc(p) + '</span>'
+    ).join('');
+
+    const features = (entry.features || []).slice(0, 5);
+    const featureHtml = features.length > 0
+      ? '<div class="history-features">' + features.map(f => `<span class="chip">${esc(f)}</span>`).join('') + '</div>'
+      : '';
+
+    html += `<div class="history-card" data-id="${esc(entry.id)}">
+      <img class="history-avatar" src="https://github.com/${esc(entry.owner)}.png?size=40" alt="" loading="lazy" onerror="this.style.display='none'">
+      <div class="history-info">
+        <div>
+          <span class="history-repo">${esc(entry.repo)}</span>
+          ${fwBadge}
+        </div>
+        <div class="history-owner">${esc(entry.owner)} ${stars ? '<span class="sep" style="display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--border-strong);vertical-align:middle;margin:0 4px"></span>' + entry.repoInfo.stars.toLocaleString() + ' stars' : ''}</div>
+        <div class="history-stats">${statHtml}</div>
+        ${featureHtml}
+      </div>
+      <div class="history-meta">
+        <span class="history-time">${timeAgo(entry.timestamp)}</span>
+        <div class="history-actions">
+          <button onclick="viewHistoryEntry('${esc(entry.id)}')">View</button>
+          <button class="btn-delete" onclick="deleteHistoryEntry('${esc(entry.id)}')">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function viewHistoryEntry(id) {
+  const history = JSON.parse(localStorage.getItem('parc_history') || '[]');
+  const entry = history.find(h => h.id === id);
+  if (!entry || !entry.fullData) return;
+  hasAnalyzed = true;
+  document.querySelector('.top-nav').classList.add('visible');
+  document.getElementById('compact-input').style.display = 'flex';
+  document.getElementById('compact-repo').textContent = entry.owner + '/' + entry.repo;
+  document.getElementById('dashboard').classList.remove('visible');
+  showDashboard(entry.fullData);
+  navigateTo('dashboard');
+}
+
+function deleteHistoryEntry(id) {
+  let history = JSON.parse(localStorage.getItem('parc_history') || '[]');
+  history = history.filter(h => h.id !== id);
+  localStorage.setItem('parc_history', JSON.stringify(history));
+  updateHistoryBadge();
+  renderHistoryView();
+}
+
+// ─── Export / Share ───────────────────────────────────────────────
+
+function exportJSON() {
+  if (!currentData) return;
+  const blob = new Blob([JSON.stringify(currentData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `parc-${currentData.owner}-${currentData.name}-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function exportMarkdown() {
+  if (!currentData) return;
+  const d = currentData;
+  const fw = d.framework?.name || 'unknown';
+  const features = (d.framework?.features || []).join(', ');
+
+  let md = `# Architecture: ${d.owner}/${d.name}\n\n`;
+  md += `**Framework**: ${fw} | **Files**: ${d.summary?.totalFiles || 0} | **Routes**: ${d.routes?.length || 0} | **APIs**: ${d.api?.length || 0} | **Agents**: ${d.agents?.length || 0}\n`;
+  if (features) md += `**Features**: ${features}\n`;
+  md += '\n';
+
+  // Routes
+  if (d.routes && d.routes.length > 0) {
+    md += `## Routes (${d.routes.length})\n\n`;
+    md += '| Route | Type |\n|-------|------|\n';
+    for (const r of d.routes) {
+      md += `| ${r.path} | ${r.type} |\n`;
+    }
+    md += '\n';
+  }
+
+  // API Endpoints
+  if (d.api && d.api.length > 0) {
+    md += `## API Endpoints (${d.api.length})\n\n`;
+    md += '| Endpoint | Methods | Auth |\n|----------|---------|------|\n';
+    for (const e of d.api) {
+      md += `| ${e.path} | ${e.methods.join(', ')} | ${e.auth ? 'yes' : 'no'} |\n`;
+    }
+    md += '\n';
+  }
+
+  // Agents
+  if (d.agents && d.agents.length > 0) {
+    md += `## Agents (${d.agents.length})\n\n`;
+    md += '| Name | Tier | Tools |\n|------|------|-------|\n';
+    for (const a of d.agents) {
+      md += `| ${a.name} | ${a.tier} | ${a.tools.join(', ') || '-'} |\n`;
+    }
+    md += '\n';
+  }
+
+  // Components
+  if (d.components && d.components.length > 0) {
+    md += `## Components (${d.components.length})\n\n`;
+    md += '| Name | Type |\n|------|------|\n';
+    for (const c of d.components) {
+      md += `| ${c.name} | ${c.type} |\n`;
+    }
+    md += '\n';
+  }
+
+  // Database
+  if (d.database?.tables && d.database.tables.length > 0) {
+    md += `## Database Tables (${d.database.tables.length})\n\n`;
+    md += '| Table | Source |\n|-------|--------|\n';
+    for (const t of d.database.tables) {
+      md += `| ${t.name} | ${t.source} |\n`;
+    }
+    md += '\n';
+  }
+
+  md += `---\n*Generated by [parc](https://github.com/0xbeam/sanctuary-cli) on ${new Date().toISOString().slice(0,10)}*\n`;
+
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `parc-${d.owner}-${d.name}-${new Date().toISOString().slice(0,10)}.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function copyShareLink() {
+  if (!currentData) return;
+  const url = `${window.location.origin}${window.location.pathname}#/analyze/${currentData.owner}/${currentData.name}`;
+  navigator.clipboard.writeText(url).then(() => {
+    const el = document.getElementById('share-text');
+    el.textContent = 'Copied!';
+    setTimeout(() => el.textContent = 'Share', 2000);
+  });
+}
 </script>
 </body>
 </html>
