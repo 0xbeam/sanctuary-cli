@@ -175,6 +175,80 @@ h1 {
   transform: none;
 }
 
+.btn-token {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: border-color 200ms, color 200ms;
+  flex-shrink: 0;
+}
+.btn-token:hover { border-color: var(--green); color: var(--green); }
+.btn-token.active { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+
+.token-panel {
+  display: none;
+  max-width: 600px;
+  margin: var(--space-3) auto 0;
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+.token-panel.visible { display: block; }
+.token-panel label {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-2);
+}
+.token-panel input {
+  width: 100%;
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text-primary);
+  outline: none;
+}
+.token-panel input:focus { border-color: var(--green); }
+.token-panel .token-hint {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  margin-top: var(--space-2);
+  line-height: 1.5;
+}
+.token-panel .token-hint a { color: var(--green); text-decoration: none; }
+.token-panel .token-hint a:hover { text-decoration: underline; }
+.token-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--green);
+  margin-top: var(--space-2);
+}
+.token-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
 .input-hint {
   font-size: var(--text-xs);
   color: var(--text-faint);
@@ -654,11 +728,23 @@ h1 {
     <div class="input-area">
       <input type="text" id="repo-input" placeholder="https://github.com/owner/repo" spellcheck="false" autocomplete="off">
       <button class="btn-analyze" id="btn-analyze" onclick="startAnalysis()">Analyze</button>
+      <button class="btn-token" id="btn-token" onclick="toggleTokenPanel()" title="GitHub token (increases rate limit to 5,000/hr)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/><circle cx="8" cy="11" r="1"/></svg>
+      </button>
+    </div>
+    <div class="token-panel" id="token-panel">
+      <label for="token-input">GitHub Personal Access Token</label>
+      <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" spellcheck="false" autocomplete="off">
+      <div class="token-hint">
+        Increases API limit from 60 to 5,000 requests/hour. No scopes needed — a token with zero permissions works.
+        <br><a href="https://github.com/settings/tokens/new?description=parc&scopes=" target="_blank">Generate token →</a>
+      </div>
+      <div class="token-status" id="token-status" style="display:none">Token saved · 5,000 requests/hr</div>
     </div>
     <div class="input-hint">Paste a public GitHub repo URL to analyze its architecture</div>
     <div class="error-banner" id="error-banner"></div>
     <div class="rate-limit-banner" id="rate-limit-banner">
-      GitHub API rate limit reached (60 requests/hour for unauthenticated use). Some file contents could not be fetched. Route and agent detection may be incomplete.
+      GitHub API rate limit reached. Add a GitHub token (lock icon above) to get 5,000 requests/hour. Some file contents could not be fetched — results may be incomplete.
     </div>
   </div>
 
@@ -722,6 +808,47 @@ const API_BASE = 'https://api.github.com';
 let rateLimitHit = false;
 let remainingRequests = 60;
 
+// ─── Token Management ───────────────────────────────────────────
+
+function getToken() {
+  return localStorage.getItem('parc_gh_token') || '';
+}
+
+function toggleTokenPanel() {
+  const panel = document.getElementById('token-panel');
+  const btn = document.getElementById('btn-token');
+  panel.classList.toggle('visible');
+  btn.classList.toggle('active', panel.classList.contains('visible'));
+}
+
+function initToken() {
+  const token = getToken();
+  const input = document.getElementById('token-input');
+  const btn = document.getElementById('btn-token');
+  const status = document.getElementById('token-status');
+  if (token) {
+    input.value = token;
+    btn.classList.add('active');
+    status.style.display = 'flex';
+  }
+  input.addEventListener('input', function() {
+    const val = this.value.trim();
+    if (val) {
+      localStorage.setItem('parc_gh_token', val);
+      btn.classList.add('active');
+      status.style.display = 'flex';
+      remainingRequests = 5000;
+    } else {
+      localStorage.removeItem('parc_gh_token');
+      btn.classList.remove('active');
+      status.style.display = 'none';
+      remainingRequests = 60;
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initToken);
+
 // ─── URL Parsing ─────────────────────────────────────────────────
 
 function parseGithubUrl(url) {
@@ -737,7 +864,10 @@ function parseGithubUrl(url) {
 // ─── GitHub API Helpers ──────────────────────────────────────────
 
 async function ghFetch(path) {
-  const res = await fetch(API_BASE + path);
+  const headers = {};
+  const token = getToken();
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(API_BASE + path, { headers });
   const remaining = res.headers.get('x-ratelimit-remaining');
   if (remaining !== null) remainingRequests = parseInt(remaining);
   if (res.status === 403 && remainingRequests <= 0) {
