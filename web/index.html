@@ -698,6 +698,145 @@ h1 {
 }
 .footer-link:hover { color: var(--green); }
 
+/* ── Changelog ── */
+.changelog-section {
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-8);
+  padding-top: var(--space-7);
+}
+.changelog-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+.changelog-header h2 {
+  font-family: var(--serif);
+  font-size: var(--text-2xl);
+  font-weight: 400;
+  color: var(--text-primary);
+}
+.changelog-header .changelog-meta {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+}
+.changelog-entry {
+  position: relative;
+  padding-left: var(--space-6);
+  margin-bottom: var(--space-7);
+}
+.changelog-entry::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: -32px;
+  width: 1px;
+  background: var(--border);
+}
+.changelog-entry:last-child::before {
+  bottom: 0;
+}
+.changelog-entry::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--green);
+}
+.changelog-entry.latest::after {
+  background: var(--green);
+}
+.changelog-version {
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+.changelog-version .tag {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  background: var(--green-dim);
+  color: var(--green);
+  padding: 1px 8px;
+  border-radius: 99px;
+  margin-left: var(--space-2);
+  vertical-align: middle;
+}
+.changelog-date {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  margin-bottom: var(--space-3);
+}
+.changelog-items {
+  list-style: none;
+}
+.changelog-items li {
+  position: relative;
+  padding-left: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-1);
+}
+.changelog-items li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.changelog-items .type {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-right: 4px;
+}
+.changelog-items .type-feat { background: var(--green-dim); color: var(--green); }
+.changelog-items .type-fix { background: var(--amber-dim); color: var(--amber); }
+.changelog-items .type-perf { background: var(--blue-dim); color: var(--blue); }
+.changelog-items .type-sec { background: var(--red-dim); color: var(--red); }
+.changelog-items .type-design { background: #F3EEFF; color: #6C4AB6; }
+
+.changelog-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+}
+.changelog-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s ease infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
 /* ── Responsive ── */
 @media (max-width: 640px) {
   .page { padding: var(--space-6) var(--space-4) var(--space-8); }
@@ -790,8 +929,91 @@ h1 {
     </div>
   </div>
 
+  <!-- Changelog -->
+  <div class="changelog-section">
+    <div class="changelog-header">
+      <h2>Changelog</h2>
+      <span class="changelog-meta">Built by agents & humans</span>
+    </div>
+
+    <div class="changelog-entry latest">
+      <div class="changelog-version">v0.3.0 <span class="tag">latest</span></div>
+      <div class="changelog-date">March 18, 2026</div>
+      <ul class="changelog-items">
+        <li><span class="type type-feat">feat</span> Web app — paste any GitHub URL, get a live architecture dashboard in the browser</li>
+        <li><span class="type type-feat">feat</span> GitHub token support — lock icon opens token panel, bumps API limit from 60 to 5,000 req/hr</li>
+        <li><span class="type type-feat">feat</span> 6-tab dashboard: Overview, Routes, API, Agents, Components, Database</li>
+        <li><span class="type type-feat">feat</span> Framework detection via package.json — Next.js, Vite, SvelteKit, Express, Hono</li>
+        <li><span class="type type-feat">feat</span> Feature detection — Tailwind, Supabase, Prisma, Drizzle, Anthropic, OpenAI, Zod, tRPC</li>
+        <li><span class="type type-feat">feat</span> Agent tier classification — reasoning (Sonnet/GPT-4/Opus), extraction (Haiku/Flash)</li>
+        <li><span class="type type-feat">feat</span> HTTP method detection by fetching route.ts file contents</li>
+        <li><span class="type type-feat">feat</span> Rate limit awareness with amber warning banner</li>
+        <li><span class="type type-feat">feat</span> Token persisted to localStorage — enter once, never again</li>
+        <li><span class="type type-design">design</span> Gravity design system — Cormorant Garamond, DM Sans, DM Mono, #2A7A5B forest green</li>
+        <li><span class="type type-design">design</span> Forced light mode, responsive layout, reduced motion support</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <div class="changelog-version">v0.2.0</div>
+      <div class="changelog-date">March 17, 2026</div>
+      <ul class="changelog-items">
+        <li><span class="type type-sec">sec</span> XSS fix — replaced inline onclick handlers with data-tab attributes</li>
+        <li><span class="type type-sec">sec</span> HTML escaping on all user-supplied data via esc() helper</li>
+        <li><span class="type type-feat">feat</span> Search/filter across all diagram tabs</li>
+        <li><span class="type type-feat">feat</span> Dark mode toggle with localStorage persistence</li>
+        <li><span class="type type-feat">feat</span> Mobile responsive layout at 640px breakpoint</li>
+        <li><span class="type type-feat">feat</span> LOC counting — 58,244 lines on sanctuary-dashboard</li>
+        <li><span class="type type-feat">feat</span> --format json option for map command</li>
+        <li><span class="type type-feat">feat</span> --watch flag for live server with debounced auto-rescan</li>
+        <li><span class="type type-feat">feat</span> .parc.json config file support</li>
+        <li><span class="type type-feat">feat</span> Architecture-level git diff (grouped by routes/agents/APIs/components)</li>
+        <li><span class="type type-feat">feat</span> Progress indicators with timestamps</li>
+        <li><span class="type type-fix">fix</span> Route extraction for monorepo structures (apps/dashboard/src/app/...)</li>
+        <li><span class="type type-fix">fix</span> SvelteKit route extraction captures full paths</li>
+        <li><span class="type type-fix">fix</span> Agent detection narrowed to code files only (.ts/.tsx/.js/.jsx/.py)</li>
+        <li><span class="type type-perf">perf</span> Incremental diff scanning via analyzeRepoDiff()</li>
+        <li><span class="type type-perf">perf</span> Non-blocking rescan with /api/status polling</li>
+        <li><span class="type type-feat">feat</span> CORS OPTIONS preflight handling</li>
+        <li><span class="type type-feat">feat</span> Request logging with timestamps</li>
+        <li><span class="type type-feat">feat</span> GraphQL, tRPC, Hono, FastAPI, Flask, Django detection</li>
+        <li><span class="type type-feat">feat</span> Docker, Kubernetes, WebSocket feature detection</li>
+        <li><span class="type type-feat">feat</span> SQL regex backtick support for MySQL-style table names</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <div class="changelog-version">v0.1.0</div>
+      <div class="changelog-date">March 17, 2026</div>
+      <ul class="changelog-items">
+        <li><span class="type type-feat">feat</span> Initial release — parc CLI with 4 commands: map, serve, agents, diff</li>
+        <li><span class="type type-feat">feat</span> parc map — static analysis generates interactive HTML architecture diagrams</li>
+        <li><span class="type type-feat">feat</span> parc serve — live dashboard with HTTP API on port 4400</li>
+        <li><span class="type type-feat">feat</span> parc agents — list detected AI agents with model tier info</li>
+        <li><span class="type type-feat">feat</span> parc diff — architecture-aware git diff</li>
+        <li><span class="type type-feat">feat</span> Next.js App Router page.tsx route detection</li>
+        <li><span class="type type-feat">feat</span> API endpoint detection from route.ts with HTTP method parsing</li>
+        <li><span class="type type-feat">feat</span> Agent discovery — reasoning tier (Sonnet/GPT-4) vs extraction tier (Haiku/Flash)</li>
+        <li><span class="type type-feat">feat</span> Component cataloging — UI vs feature classification</li>
+        <li><span class="type type-feat">feat</span> Database detection — Prisma schemas, SQL CREATE TABLE</li>
+        <li><span class="type type-feat">feat</span> Framework detection — Next.js, Vite, SvelteKit, Express</li>
+        <li><span class="type type-feat">feat</span> Feature detection — Tailwind, Supabase, Prisma, Anthropic, Zod</li>
+        <li><span class="type type-feat">feat</span> Git info — branch, last commit, author, remote URL</li>
+        <li><span class="type type-feat">feat</span> 7-tab diagram: Overview, Routes, API, Agents, Components, Data, Git</li>
+        <li><span class="type type-design">design</span> Gravity design system styling throughout</li>
+        <li><span class="type type-feat">feat</span> Commander.js CLI pattern with --no-open flag</li>
+        <li><span class="type type-feat">feat</span> Tested on sanctuary-dashboard (335 files, 61 routes, 26 APIs, 49 agents)</li>
+      </ul>
+    </div>
+
+    <div class="changelog-badge">
+      <span class="dot"></span>
+      sanctuary parc 2026
+    </div>
+  </div>
+
   <div class="footer">
-    <div class="footer-left">Built by <a href="https://github.com/0xbeam">Sanctuary</a></div>
+    <div class="footer-left">Built by agents & humans at <a href="https://github.com/0xbeam">Sanctuary</a></div>
     <div class="footer-links">
       <a class="footer-link" href="https://github.com/0xbeam/sanctuary-cli">GitHub</a>
       <a class="footer-link" href="https://github.com/0xbeam/sanctuary-cli/issues">Issues</a>
